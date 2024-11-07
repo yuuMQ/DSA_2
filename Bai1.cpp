@@ -2,8 +2,10 @@
 #include <vector>
 #include <ctime>
 #include <string>
+#include <iomanip>
+#include <chrono>
 using namespace std;
-
+using namespace std::chrono;
 void printArr(int a[], int n) {
 	for (int i = 0; i < n; i++) {
 		cout << a[i] << "\t";
@@ -22,7 +24,7 @@ void insertionSort(int arr[], int n, int &cnt, int &time){
 		}
 		arr[j + 1] = key;
 		++time;
-		printArr(arr, n);
+		// printArr(arr, n);
 	}
 }
 
@@ -40,7 +42,7 @@ int partition(int arr[], int n, int low, int high, int &cnt) {
 	}
 	swap(arr[i + 1], arr[high]);
 	cnt++;
-	printArr(arr, n);
+	// printArr(arr, n);
 	return (i + 1);
 }
 void quickSort(int arr[], int n, int low, int high, int &cnt, int &time) {
@@ -75,7 +77,7 @@ void heapSort(int arr[], int n, int &heapify_count, int &time) {
 	}
 	for (int i = n - 1; i >= 0; i--) {
 		swap(arr[0], arr[i]);
-		printArr(arr, n);
+		// printArr(arr, n);
 		time++;
 		heapify(arr, i, 0, heapify_count);
 	}
@@ -113,10 +115,6 @@ void shell_sort(int a[], int n) {
 		}
 	}
 }
-void counting_sort(int a[], int n) {
-
-}
-
 
 
 int main() {
@@ -144,7 +142,7 @@ int main() {
 		switch (select) {
 			case 0: {
 				for (int i = 0; i < n; i++) {
-					a[i] = rand() % 100 + 1;
+					a[i] = rand() % 100000 + 1;
 				}
 				break;
 			}
@@ -167,33 +165,44 @@ int main() {
 			cout << "1. Insertion sort \n";
 			cout << "2. Quick sort \n";
 			cout << "3. Heap sort \n";
-			cout << "4. ao ra day so Fibonacci \n";
+			cout << "4. tao ra day so Fibonacci \n";
 			cout << "5. Shell sort \n";
 			cout << "0. Ket thuc Mang \n";
 			cout << "=========================\n";
 			cout << "Lua chon cua ban -> "; cin >> select;
 			switch (select) {
 				case 1: {
-					printArr(check, n);
+					// printArr(check, n);
 					cout << "===========INSERTION SORT========\n";
+					auto start = clock();
 					insertionSort(check, n, cnt, time);
+					auto end = clock();
+					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
 					cout << "Tong so lan gan la: " << cnt << endl;
 					cout << "So lan thuc hien phep toan: " << time << endl;
 					break;
 				}
 				case 2: {
-					printArr(check, n);
+					// printArr(check, n);
 					cout << "==============QUICK SORT==========\n";
+					auto start = clock();
 					quickSort(check, n, 0, n-1, cnt, time);
+					auto end = clock();
+					auto duration = (end - start)/(double)CLOCKS_PER_SEC;
+					cout << "Thoi gian thuc hien: " << duration << endl;
 					cout << "So lan gan: " << cnt << endl;
 					cout << "So lan de quy: " << time << endl; 
 					break;
 				}
 				case 3: {
-					printArr(check, n);
+					// printArr(check, n);
 					int heapify_count = 0;
 					cout << "============HEAP SORT==============\n";
+					auto start = clock();
 					heapSort(check, n, heapify_count, time);
+					auto end = clock();
+					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
+					cout << "Thoi gian thuc hien: " << duration << endl;
 					cout << "So lan heapify: " << heapify_count << endl;
 					cout << "So lan thuc hien: " << time << endl;
 					break;
@@ -210,10 +219,12 @@ int main() {
 					break;
 				}
 				case 5: {
-					printArr(check, n);
 					cout << "===============SHELL SORT===============\n";
+					auto start = clock();
 					shell_sort(check, n);
-					printArr(check, n);
+					auto end = clock();
+					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
+					cout << "Thoi gian thuc hien: " << duration << endl;
 					break;
 				}
 				case 0: {
@@ -229,7 +240,7 @@ int main() {
 			delete[] check;
 			check = nullptr;
 		} while (select != 0);
-		cout << "nhap gia tri bat ki de tiep tuc thuc hien, nhap 0 de dung lai"<<endl;
+		cout << "nhap gia tri bat ki de khoi tao lai mang, nhap 0 de dung lai"<<endl;
 		cin >> choice;
 	} while (choice != "0");
 	delete[] a;
