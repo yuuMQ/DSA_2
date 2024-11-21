@@ -1,251 +1,370 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <string>
+#include <functional>
 #include <iomanip>
-#include <chrono>
+#include <algorithm>
 using namespace std;
-using namespace std::chrono;
+
+void ShellSort(int a[], int n) {
+	int cnt = 0;
+	int x = 0;
+	for (int gap = n / 2; gap > 0; gap /= 2) {
+		int cnt_insertion_sort = 0;
+		cout << "gap thu " << ++x << " : " << endl;
+		for (int i = gap; i < n; i++) {
+			int tmp = a[i];
+			int j = i ;
+			while (j >= gap && a[j - gap] > tmp) {
+				a[j] = a[j - gap];
+				j -= gap;
+				cnt_insertion_sort++;
+			}
+			a[j] = tmp;
+		}
+		cout << "so lan hoan vi: " << cnt_insertion_sort << endl;
+		for (int i = 0; i < n; i++) {
+			cout << a[i] << "\t";
+		}
+		cout << endl;
+		++cnt;
+	}
+	cout << "So lan thuc hien gap: " << cnt << endl;
+}
+
+int findMax(int a[], int n) {
+	int res = a[0];
+	for (int i = 1; i < n; i++) {
+		if (a[i] > res) {
+			res = a[i];
+		}
+	}
+	return res;
+}
+
+
+
+
+
+void CountingSort(int a[], int n) {
+	int *count;
+	int *output;
+	int max = findMax(a, n);
+	count = new int[max + 1]();
+	output = new int[n];
+
+	int demsolanCount = 0;
+	int demsolanGan = 0;
+	for (int i = 0; i < n; i++) {
+		count[a[i]]++ ; 
+		demsolanCount++;
+	}
+	for (int i = 1; i <= max; i++) {
+		count[i] += count[i - 1];
+		demsolanCount++;
+	}
+	for (int i = n-1; i >= 0; i--) {
+		output[count[a[i]] -1] = a[i];
+		count[a[i]]--;
+		demsolanGan++;
+	}
+
+	cout << "So lan thuc hien count: " << demsolanCount << endl;
+	cout << "So lan gan: " << demsolanGan << endl;
+	for (int i = 0; i < n; i++) {
+		cout << output[i] << " ";
+	}
+	cout << endl;
+	delete[] count;
+	delete[] output;
+}
+
+
+void CountingSort(long long a[], int n, int exp) {
+	int count[10] = { 0 };
+	int *output = new int[n];
+	int demsolanCount = 0;
+	int demsolanGan = 0;
+	for (int i = 0; i < n; i++) {
+		count[(a[i] / exp) % 10] ++;
+		demsolanCount++;
+	}
+	for (int i = 1; i <= 9; i++) {
+		count[i] += count[i - 1];
+		demsolanCount++;
+	}
+	for (int i = n - 1; i >= 0; i--) {
+		output[count[(a[i] / exp )% 10] - 1] = a[i];
+		count[(a[i] / exp % 10)]--;
+		demsolanGan++;
+	}
+
+	cout << "So lan thuc hien count: " << demsolanCount << endl;
+	cout << "So lan gan: " << demsolanGan << endl;
+	for (int i = 0; i < n; i++) {
+		cout << output[i] << "\t";
+	}
+	cout << endl;
+	delete[] output;
+}
+
+void RadixSort(long long a[], int n) {
+	long long max = 0;
+	for (int i = 1; i < n; i++) {
+		if (a[i] > max) {
+			max = a[i];
+		}
+	}
+	int i = 0;
+	for (int exp = 1; max / exp > 0; exp *= 10) {
+		cout << "Lan thuc hien thu " << i + 1 << " : " << endl;
+		CountingSort(a, n, exp);
+	}
+}
+
+
+void CountingSort(vector<double> &buckets) {
+
+}
+
+
+void InsertionSort(vector<double> &buckets) {
+	int n = buckets.size();
+	for (int i = 1; i < n; i++) {
+		int j = i-1;
+		double tmp = buckets[i];
+		while (j >= 0 && buckets[j ] > tmp) {
+			buckets[j + 1] = buckets[j];
+			j--;
+		}
+		buckets[j + 1] = tmp;
+	}
+	for (int i = 0; i < n; i++) {
+		cout << buckets[i] << "\t";
+	}
+	cout << endl;
+}
+
+void BucketSort(double a[], int n) {
+	vector<double> buckets[10005];
+	for (int i = 0; i < n; i++) {
+		int bi = n*a[i];
+		buckets[bi].push_back(a[i]);
+	}
+	int x = 0;
+	for (int i = 0; i < n; i++) {
+		if (!buckets[i].empty()) {
+			cout << "Lan thuc hien insertion sort thu " << ++x <<" tai bucket thu "<< i << " : " << endl;
+			InsertionSort(buckets[i]);
+		}
+	}
+	int cnt = 0;
+	int idx = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < buckets[i].size(); j++) {
+			a[idx++] = buckets[i][j];
+			++cnt;
+		}
+		for (int i = 0; i < n; i++) {
+			cout << a[i] << "\t";
+		}
+		cout << endl;
+	}
+	cout << "so lan gop cac phan tu: " << cnt<<endl;
+}
+
+
+void automaticallyValue(int a[], int n) {
+	srand(time(NULL));
+	for (int i = 0; i < n; i++) {
+		a[i] = rand() % 10000 + 1;
+	}
+}
+
+void automaticallyValue(double a[], int n) {
+	srand(time(NULL));
+	for (int i = 0; i < n; i++) {
+		a[i] = static_cast<double>(rand()) / RAND_MAX;
+	}
+}
+
 void printArr(int a[], int n) {
 	for (int i = 0; i < n; i++) {
 		cout << a[i] << "\t";
 	}
 	cout << endl;
 }
-
-void insertionSort(int arr[], int n, int &cnt, int &time){
-	for (int i = 1; i < n; ++i) {
-		int key = arr[i];
-		int j = i - 1;
-		while (j >= 0 && arr[j] > key) {
-			arr[j + 1] = arr[j];
-			j = j - 1;
-			++cnt;
-		}
-		arr[j + 1] = key;
-		++time;
-		// printArr(arr, n);
-	}
-}
-
-
-
-int partition(int arr[], int n, int low, int high, int &cnt) {
-	int pivot = arr[high];
-	int i = (low - 1);
-	for (int j = low; j <= high - 1; j++) {
-		if (arr[j] <= pivot) {
-			cnt++;
-			i++;
-			swap(arr[i], arr[j]);
-		}
-	}
-	swap(arr[i + 1], arr[high]);
-	cnt++;
-	// printArr(arr, n);
-	return (i + 1);
-}
-void quickSort(int arr[], int n, int low, int high, int &cnt, int &time) {
-	if (low < high) {
-		++time;
-		int pi = partition(arr, n, low, high, cnt);
-		quickSort(arr, n, low, pi - 1, cnt, time);
-		quickSort(arr, n,  pi + 1, high, cnt, time);		
-	}
-}
-
-void heapify(int arr[], int n, int i, int &heapify_count) {
-	int largest = i;
-	int left = 2 * i + 1;
-	int right = 2 * i + 2;
-	if (left < n && arr[left] > arr[largest]) {
-		largest = left;
-	}
-	if (right < n && arr[right] > arr[largest]) {
-		largest = right;
-	}
-	if (largest != i) {
-		swap(arr[i], arr[largest]);
-		heapify_count++;
-		heapify(arr, n, largest, heapify_count);
-	}
-}
-
-void heapSort(int arr[], int n, int &heapify_count, int &time) {
-	for (int i = n / 2 - 1; i >= 0; i--) {
-		heapify(arr, n, i, heapify_count);
-	}
-	for (int i = n - 1; i >= 0; i--) {
-		swap(arr[0], arr[i]);
-		// printArr(arr, n);
-		time++;
-		heapify(arr, i, 0, heapify_count);
-	}
-}
-
-
-
-int Fibonacci(int n, int &cnt){
-	if (n <= 1) {
-		return n;
-	}
-	cnt++;
-	int left = Fibonacci(n - 2, cnt);
-	int right = Fibonacci(n - 1, cnt);
-	return left + right;
-}
-
-
-void insertValuesToOtherArr(int a[], int b[], int n) {
+void printArr(double a[], int n) {
 	for (int i = 0; i < n; i++) {
-		b[i] = a[i];
+		cout << a[i] << "\t";
 	}
+	cout << endl;
 }
-
-void shell_sort(int a[], int n) {
-	for (int gap = n / 2; gap > 0; gap/=2) {
-		for (int i = gap; i < n; i++) {
-			int tmp = a[i];
-			int j = i;
-			while (j >= gap && a[j-gap] > tmp) {
-				a[j] = a[j - gap];
-				j-=gap;
-			}
-			a[j] = tmp;
-		}
-	}
-}
-
 
 int main() {
-	srand(time(NULL));
-	string choice;
-	int n;
-	int *a;
+	srand(time(0));
+	int choice;
+	
 	do {
 		system("cls");
-		do {
-			cout << "Nhap kich thuoc cua mang (n): ";
-			cin >> n;
-			if (n <= 0) cout << "Gia tri khong hop le!!" << endl;
-		} while (n <= 0);
-		a = new int[n];
-		int select;
-		do {
-			cout << "Ban muon nhap manual(1) hay automatic(0): ";
-			cin >> select;
-			if (select != 1 && select != 0) {
-				cout << "Lua chon khong hop le!! \n";
-			}
-		} while (select != 1 && select != 0);
-
-		switch (select) {
-			case 0: {
-				for (int i = 0; i < n; i++) {
-					a[i] = rand() % 100000 + 1;
+		cout << "==================MENU===============\n";
+		cout << "1. Shell Sort \n";
+		cout << "2. Counting Sort \n";
+		cout << "3. Radix Sort \n";
+		cout << "4. Bucket Sort \n";
+		cout << "0. exits \n";
+		cout << "=====================================\n";
+		cout << "---> Your choice: "; cin >> choice;
+		int selection, n, option;
+		if (choice > 0 && choice <= 4) {
+			do {
+				cout << " You want your array values will be automatic(0) or manual(1)?  ";
+				cin >> selection;
+				if (selection != 0 && selection != 1) {
+					cout << "ERROR VALUE!!! \n";
 				}
+			} while (selection != 0 && selection != 1);
+			cout << "So luong phan tu cua mang: ";
+			cin >> n;
+			if (selection == 0) {
+				do {
+					cout << "Option: Best (0) or Worst (1) case? \n";
+					cin >> option;
+					if (option != 0 && option != 1) {
+						cout << "ERROR OPTION!!! \n";
+					}
+				} while (option != 0 && option != 1);
+			}
+		}
+		switch (choice) {
+			case 0: {
+				cout << "STOP THE MENU !!! \n";
 				break;
 			}
+
+			//Shell Sort
 			case 1: {
-				cout << "Ban hay tu nhap gia tri cho mang: " << endl;
-				for (int i = 0; i < n; i++) {
-					cin >> a[i];
+				int *a = new int[n];
+				if (selection == 0) {
+					automaticallyValue(a, n);
+					if (option == 0) {
+						sort(a, a + n);
+						
+					}
+					else {
+						sort(a, a + n, greater<>());
+					}
+					
 				}
+				else {
+					for (int i = 0; i < n; i++) {
+						printf("nhap phan tu a[%d]: ", i);
+						cin >> a[i];
+					}
+				}
+			
+				cout << "Mang sau khi duoc khoi tao: \n";
+				printArr(a, n);
+				cout << "---------------------------\n";
+				ShellSort(a, n);
+				delete[] a;
+				break;
+			}
+
+			//Counting Sort
+			case 2: {
+				int *a = new int[n];
+				if (selection == 0) {
+					automaticallyValue(a, n);
+					if (option == 0) {
+						for (int i = 0; i < n; i++) {
+							a[i] = 1;
+						}
+					}
+					else {
+						int max = findMax(a, n);
+						a[n - 1] = pow(max, 2);
+					}
+				}
+				else {
+					for (int i = 0; i < n; i++) {
+						printf("nhap phan tu a[%d]: ", i);
+						cin >> a[i];
+					}
+				}
+				cout << "Mang sau khi duoc khoi tao: \n";
+				printArr(a, n);
+				cout << "---------------------------\n";
+				CountingSort(a, n);
+				delete[] a;
+				break;
+			}
+
+			//radix sort
+			case 3: {
+				long long *a = new long long[n];
+				if (selection == 0) {
+					if (option == 0) {
+						for (int i = 0; i < n; i++) {
+							a[i] = rand()%10;
+						}
+					}
+					else {
+						for (int i = 0; i < n; i++) {
+							a[i] = rand() % 100000 + 1;
+						}
+					}
+
+				}
+				else {
+					for (int i = 0; i < n; i++) {
+						printf("nhap phan tu a[%d]: ", i);
+						cin >> a[i];
+					}
+				}
+				cout << "Mang sau khi duoc khoi tao: \n";
+				for (int i = 0; i < n; i++) {
+					cout << a[i] << "\t";
+				}
+				cout << endl;
+				cout << "---------------------------\n";
+				RadixSort(a, n);
+				
+				delete[] a;
+				break;
+			}
+
+			// buckets sort 
+			case 4: {
+				double *a = new double[n];
+				if (selection == 0) {
+					automaticallyValue(a, n);
+					if(option == 1) {
+						for (int i = n-1; i >= 0; i--) {
+							a[i] = 0.1 + (n-i-1)*0.000001;
+						}
+					}
+				}
+				else {
+					for (int i = 0; i < n; i++) {
+						printf("nhap phan tu a[%d]: ", i);
+						cin >> a[i];
+					}
+				}
+				cout << "Mang sau khi duoc khoi tao: \n";
+				printArr(a, n);
+				cout << "---------------------------\n";
+				BucketSort(a, n);
+				delete[] a;
+				break;
+			}
+			default: {
+				cout << "YOUR CHOICE IS NOT ACCEPTED \n";
 				break;
 			}
 		}
-
-		do {
-			system("cls");
-			int cnt = 0;
-			int *check = new int[n];
-			int time = 0;
-			insertValuesToOtherArr(a, check, n);
-			cout << "===========MENU==========\n";
-			cout << "1. Insertion sort \n";
-			cout << "2. Quick sort \n";
-			cout << "3. Heap sort \n";
-			cout << "4. tao ra day so Fibonacci \n";
-			cout << "5. Shell sort \n";
-			cout << "0. Ket thuc Mang \n";
-			cout << "=========================\n";
-			cout << "Lua chon cua ban -> "; cin >> select;
-			switch (select) {
-				case 1: {
-					// printArr(check, n);
-					cout << "===========INSERTION SORT========\n";
-					auto start = clock();
-					insertionSort(check, n, cnt, time);
-					auto end = clock();
-					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
-					cout << "Tong so lan gan la: " << cnt << endl;
-					cout << "So lan thuc hien phep toan: " << time << endl;
-					break;
-				}
-				case 2: {
-					// printArr(check, n);
-					cout << "==============QUICK SORT==========\n";
-					auto start = clock();
-					quickSort(check, n, 0, n-1, cnt, time);
-					auto end = clock();
-					auto duration = (end - start)/(double)CLOCKS_PER_SEC;
-					cout << "Thoi gian thuc hien: " << duration << endl;
-					cout << "So lan gan: " << cnt << endl;
-					cout << "So lan de quy: " << time << endl; 
-					break;
-				}
-				case 3: {
-					// printArr(check, n);
-					int heapify_count = 0;
-					cout << "============HEAP SORT==============\n";
-					auto start = clock();
-					heapSort(check, n, heapify_count, time);
-					auto end = clock();
-					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
-					cout << "Thoi gian thuc hien: " << duration << endl;
-					cout << "So lan heapify: " << heapify_count << endl;
-					cout << "So lan thuc hien: " << time << endl;
-					break;
-				}
-				case 4: {
-					cout << "============FIBONACCI============\n";
-					cout << "Nhap so luong phan tu fibonacci: "; cin >> n;
-					cout << "Day so fibonacci co " << n << " phan tu: \n";
-					for (int i = 0; i < n; i++) {
-						cout << Fibonacci(i, cnt) << "\t";
-					}
-					cout << endl;
-					cout << "So lan thuc hien de quy: " << cnt << endl;
-					break;
-				}
-				case 5: {
-					cout << "===============SHELL SORT===============\n";
-					auto start = clock();
-					shell_sort(check, n);
-					auto end = clock();
-					auto duration = (end - start) / (double)CLOCKS_PER_SEC;
-					cout << "Thoi gian thuc hien: " << duration << endl;
-					break;
-				}
-				case 0: {
-					cout << "Ket thuc mang duoc tao!! \n";
-					break;
-				}
-				default:{
-					cout << "Khong hop le!! \n";
-					break;
-				}
-			}
-			system("pause");
-			delete[] check;
-			check = nullptr;
-		} while (select != 0);
-		cout << "nhap gia tri bat ki de khoi tao lai mang, nhap 0 de dung lai"<<endl;
-		cin >> choice;
-	} while (choice != "0");
-	delete[] a;
-	a = nullptr;
-	system("pause");
+		system("pause");
+	} while (choice != 0);
+	
 	return 0;
-
 }
